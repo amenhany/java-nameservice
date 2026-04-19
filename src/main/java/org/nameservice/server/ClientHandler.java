@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+
 public class ClientHandler implements Runnable {
     Socket client;
     ServiceRegistry registry;
@@ -30,35 +31,39 @@ public class ClientHandler implements Runnable {
                 String[] parts = inputLine.split("\\s+");
                 if (parts.length == 0 || parts[0].isEmpty()) continue;
 
-                String command = parts[0].toUpperCase();
-                String response = "ERROR: Unknown Command";
+                CommandType command = CommandType.fromString(parts[0]);
+                String response;
+                 if (command == null) {
+                    response = "ERROR: Invalid Command";
+                    out.println(response);
+                    continue;
+                }
 
                 try {
                     switch (command) {
-                        case "REGISTER":
+                        case REGISTER:
                             if (parts.length >= 3) {
                                 response = registry.register(parts[1], parts[2]);
                             } else {
                                 response = "ERROR: Missing arguments for REGISTER";
                             }
                             break;
-                        case "RESOLVE":
+                        case RESOLVE:
                             if (parts.length >= 2) {
                                 response = registry.resolve(parts[1]);
                             } else {
                                 response = "ERROR: Missing arguments for RESOLVE";
                             }
                             break;
-                        case "DEREGISTER":
+                        case DEREGISTER:
                             if (parts.length >= 2) {
                                 response = registry.deregister(parts[1]);
                             } else {
                                 response = "ERROR: Missing arguments for DEREGISTER";
                             }
                             break;
-                        default:
-                            response = "ERROR: Invalid Command Format";
-                            break;
+                       default:
+                            response = "ERROR: Unknown Command";
                     }
                 } catch (Exception e) {
                    response = "ERROR: Server Exception - " + e.getMessage();
