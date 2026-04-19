@@ -31,4 +31,5 @@ tasks.register<JavaExec>("runClient") {
     mainClass.set("org.nameservice.client.NodeClient")
     classpath = sourceSets.main.get().runtimeClasspath
     args("localhost", "3000")
+    standardInput = System.`in`
 }

@@ -8,13 +8,15 @@ import java.net.Socket;
 
 public class NodeClient {
 
-    private static final String HOST = "localhost";
-    private static final int PORT = 3000; 
+    private static final String DEFAULT_HOST = "localhost";
+    private static final int DEFAULT_PORT = 3000;
 
     public static void main(String[] args) {
+        String host = args.length > 0 ? args[0] : DEFAULT_HOST;
+        int port = args.length > 1 ? Integer.parseInt(args[1]) : DEFAULT_PORT;
 
         try (
-            Socket socket = new Socket(HOST, PORT);
+            Socket socket = new Socket(host, port);
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
@@ -26,7 +28,7 @@ public class NodeClient {
                     new InputStreamReader(System.in))
         ) {
 
-            System.out.println("Connected to NameService on port " + PORT);
+            System.out.println("Connected to NameService on port " + port);
             System.out.println("Commands:");
             System.out.println("REGISTER <name> <ip>");
             System.out.println("RESOLVE <name>");
